@@ -24,6 +24,36 @@ public class LinkedListTest {
 			}
 		}
 	}
+	
+	/**
+	 * remove node i the middle of the linkedlist
+	 * cannot be solved if node to be deleted is the last node in the LL
+	 */
+	public static boolean deleteNode (LinkedListNode head) {
+		if (head == null || head.next == null) {
+			return false;
+		}
+		LinkedListNode next = head.next;
+		head.data = next.data;
+		return true;
+	}
+	
+	/**
+	 * delete a node in LL
+	 */
+	public LinkedListNode<Integer> deleteNode (LinkedListNode<Integer> head, Integer data) {
+		LinkedListNode n = head;
+		if (n.data.equals(data)) {
+			return head.next;
+		}
+		while (n.next != null) {
+			if (n.next.data.equals(data)) {
+				n.next = n.next.next;
+				return head;
+			}
+			n = n.next;
+		}
+	}
 }
 
 
