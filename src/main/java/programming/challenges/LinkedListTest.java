@@ -53,7 +53,49 @@ public class LinkedListTest {
 			}
 			n = n.next;
 		}
+		return n;
 	}
+	
+	/**
+	 * 
+	 * @param head
+	 * @return
+	 */
+	public LinkedListNode<Integer> reverse(LinkedListNode<Integer> head) {
+
+		if (head == null || head.next == null) {
+			return null;
+		}
+		LinkedListNode second = head.next;
+		LinkedListNode third = second.next;
+		second.next = head; // point 2nd pointer to head
+		head.next = null; // change head pointer to null
+		if (third == null)
+			return second; // only have two nodes
+		LinkedListNode currNode = third;
+		LinkedListNode prevNode = second;
+		while (currNode != null) {
+			LinkedListNode nextNode = currNode.next;
+			currNode.next = prevNode;
+			prevNode = currNode;
+			currNode = nextNode;
+		}
+		head = prevNode;
+		return head;
+	}
+	
+	public LinkedListNode<Integer> recursiveReverse(LinkedListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		
+		LinkedListNode reverse = recursiveReverse(head.next);
+		head.next.next = head;
+		head.next = null;
+		return reverse;
+		
+	}
+	
 }
 
 

@@ -5,6 +5,9 @@ import java.util.Arrays;
 public class Misc {
 
 	public static void main(String[] args) {
+		Misc miscTests = new Misc();
+		int [] nums = { 0,1,0,0,1,1,1,0,1,0};
+		System.out.println("binaryArray sorted: " + (miscTests.sortBinaryArray(nums)).toString());
 
 	}
 
@@ -71,6 +74,29 @@ public class Misc {
 			}
 		}
 		return anagram.isEmpty();
+	}
+	
+	/**
+	 * sort binary array with minimum time complexity
+	 */
+	public int[] sortBinaryArray(int [] nums) {
+		if (nums == null || nums.length == 0 ){
+			return nums;
+		}
+		int left = 0, right = nums.length - 1;
+		while (left < right) {
+			if (nums[left] == 0) {
+				left++;
+			}
+			if (nums[right] == 1){
+				right--;
+			}
+			int temp = nums[left];
+			nums[left] = nums[right];
+			nums[right] = temp;
+			
+		}
+		return nums;
 	}
 
 }
