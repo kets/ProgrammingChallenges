@@ -2,16 +2,16 @@ package programming.challenges;
 
 public class LinkedListTest {
 
-	public static void deleteDups2(LinkedListNode head) {
+	public static void deleteDups2(LinkedListNode<Integer> head) {
 		if (head == null)
 			return;
-		LinkedListNode previous = head;
-		LinkedListNode current = previous.next;
+		LinkedListNode<Integer> previous = head;
+		LinkedListNode<Integer> current = previous.next;
 		while (current != null) {
-			LinkedListNode runner = head;
+			LinkedListNode<Integer> runner = head;
 			while (runner != current) { // Check for earlier dups
 				if (runner.data == current.data) {
-					LinkedListNode tmp = current.next; // remove current
+					LinkedListNode<Integer> tmp = current.next; // remove current
 					previous.next = tmp;
 					current = tmp; // update current to next node
 					break; // all other dups have already been removed
@@ -29,11 +29,11 @@ public class LinkedListTest {
 	 * remove node i the middle of the linkedlist
 	 * cannot be solved if node to be deleted is the last node in the LL
 	 */
-	public static boolean deleteNode (LinkedListNode head) {
+	public static boolean deleteNode (LinkedListNode<Integer> head) {
 		if (head == null || head.next == null) {
 			return false;
 		}
-		LinkedListNode next = head.next;
+		LinkedListNode<Integer> next = head.next;
 		head.data = next.data;
 		return true;
 	}
@@ -42,7 +42,7 @@ public class LinkedListTest {
 	 * delete a node in LL
 	 */
 	public LinkedListNode<Integer> deleteNode (LinkedListNode<Integer> head, Integer data) {
-		LinkedListNode n = head;
+		LinkedListNode<Integer> n = head;
 		if (n.data.equals(data)) {
 			return head.next;
 		}
@@ -66,16 +66,16 @@ public class LinkedListTest {
 		if (head == null || head.next == null) {
 			return null;
 		}
-		LinkedListNode second = head.next;
-		LinkedListNode third = second.next;
+		LinkedListNode<Integer> second = head.next;
+		LinkedListNode<Integer> third = second.next;
 		second.next = head; // point 2nd pointer to head
 		head.next = null; // change head pointer to null
 		if (third == null)
 			return second; // only have two nodes
-		LinkedListNode currNode = third;
-		LinkedListNode prevNode = second;
+		LinkedListNode<Integer> currNode = third;
+		LinkedListNode<Integer> prevNode = second;
 		while (currNode != null) {
-			LinkedListNode nextNode = currNode.next;
+			LinkedListNode<Integer> nextNode = currNode.next;
 			currNode.next = prevNode;
 			prevNode = currNode;
 			currNode = nextNode;
@@ -84,12 +84,12 @@ public class LinkedListTest {
 		return head;
 	}
 	
-	public LinkedListNode<Integer> recursiveReverse(LinkedListNode head) {
+	public LinkedListNode<Integer> recursiveReverse(LinkedListNode<Integer> head) {
 		if (head == null || head.next == null) {
 			return head;
 		}
 		
-		LinkedListNode reverse = recursiveReverse(head.next);
+		LinkedListNode<Integer> reverse = recursiveReverse(head.next);
 		head.next.next = head;
 		head.next = null;
 		return reverse;

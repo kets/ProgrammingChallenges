@@ -112,6 +112,39 @@ public class BinaryTree {
 		return node;
 
 	}
+	
+	/**
+	 * you are given a pointer to the root of a binary tree. Print the top view of the binary tree. 
+	 * @param currNode
+	 */
+	public void topView(Node currNode){
+		if (currNode == null) {
+			return;
+		} else {
+			leftView(currNode.left);
+			System.out.print(currNode.data + " ");
+			rightView(currNode.right);
+
+		}
+	}
+	
+	private void leftView (Node leftNode) {
+	    if (leftNode == null) {
+	        return;        
+	    }
+	    leftView(leftNode.left);
+	    System.out.print(leftNode.data + " ");
+	    
+	}
+
+	private void rightView (Node rightNode) {
+	    if (rightNode == null) {
+	        return;        
+	    }
+	    System.out.print(rightNode.data + " ");
+	    rightView(rightNode.right);    
+	    
+	}
 
 	/**
 	 * Build 123 using three pointer variables. 2 / \ 1 3
@@ -209,7 +242,7 @@ public class BinaryTree {
 
 	}
 
-	private void printInOrderTree(Node node) {
+	public void printInOrderTree(Node node) {
 		if (node == null) {
 //			 System.out.println("Tree is empty!");
 			return;
@@ -261,6 +294,7 @@ public class BinaryTree {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void printLeaves(Node node) {
 		if (node == null) {
 			// empty tree, return
@@ -454,6 +488,7 @@ public class BinaryTree {
 
 	}
 
+	@SuppressWarnings("unused")
 	private Node createBST() {
 		Node root = null;
 		int[] bstArray = { 12, 4, 7, 5, 3, 18, 20, 42, 1, 19, 6 };
@@ -493,15 +528,14 @@ public class BinaryTree {
 	}
 
 	public static void main(String[] args) {
-		// Node root = new Node(3);
-		// root.left = new Node(4);
-		// root.left.left = new Node(10);
-		// root.left.left.left = new Node(11);
-		// root.left.right = new Node(5);
-		// root.right = new Node(6);
-		// root.right.left = new Node(9);
-		// root.right.right = new Node(8);
-		// root.right.left.right = new Node(12);
+		 Node root = new Node(3);
+		 root.left = new Node(5);
+		 root.left.left = new Node(1);
+		 root.left.left.right = new Node(9);
+		 root.right = new Node(2);
+		 root.right.left = new Node(6);
+		 root.right.right = new Node(7);
+		 root.right.right.left = new Node(8);
 
 		// BinaryTree bt = new BinaryTree(root);
 
@@ -514,13 +548,15 @@ public class BinaryTree {
 		// bt.printPaths();
 
 		BinaryTree bt2 = new BinaryTree();
-		System.out.println("swap Bit: " + bt2.swapBit(5));
-		Node root = bt2.createBST();
-		System.out.println("root: " + root.data);
+		//System.out.println("swap Bit: " + bt2.swapBit(5));
+		//Node root = bt2.createBST();
+		
+		//System.out.println("root: " + root.data);
 //		bt2.printPaths2(root);
-		bt2.printInOrderTree(root);
-		System.out.println("max depth: "+ bt2.maxDepth(root));
-		System.out.println("isBalanced: "+ bt2.checkBalance(root));
+	//	bt2.printInOrderTree(root);
+		//System.out.println("max depth: "+ bt2.maxDepth(root));
+		//System.out.println("isBalanced: "+ bt2.checkBalance(root));
+		bt2.topView(root);
 
 //		for (int i = 1; i < 11; i++) {
 //			bt2.currentNodeCount = 0;
