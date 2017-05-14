@@ -1,8 +1,11 @@
 package programming.challenges;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 public class BinaryTree {
 	// root node pointer. will be null for an empty tree
 
@@ -145,6 +148,14 @@ public class BinaryTree {
 	    rightView(rightNode.right);    
 	    
 	}
+	
+	public void printLevelOrder(Node currNode) {
+		if (root == null) {
+			return;
+		} else {
+			
+		}
+	}
 
 	/**
 	 * Build 123 using three pointer variables. 2 / \ 1 3
@@ -216,6 +227,161 @@ public class BinaryTree {
 			return Math.max(leftDepth, rightDepth) + 1;
 		}
 	}
+	
+
+	/**
+	 * given a binary tree, return the longest paths b/w any two nodes in a tree. This path may or may not pass through the root
+	 * @param root
+	 * @return
+	 */
+	public List<List<Integer>> longestPath(Node root) {
+		
+		List<Integer> longestPath = null;
+		
+		return null;
+		
+	}
+	
+	/**
+	 * convert a ternary expression into a binary tree
+	 * ex: 1?2?3:4:5
+	 * @param str
+	 * @return
+	 */
+	public Node build(String str) {
+		if (str == null || str.length() == 0) {
+			return null;
+		}
+		
+		Node root = new Node(Character.getNumericValue(str.charAt(0)));
+		Stack<Node> treeStack = new Stack<Node>();
+		treeStack.push(root);
+		
+		for (int i = 1; i < str.length(); i += 2) {
+			Integer currNodeData = Character.getNumericValue(str.charAt(i + 1));
+			Node currNode = new Node(currNodeData);
+			System.out.println("currNode.data - " + currNode.data);
+			if (str.charAt(i) == '?') {
+				System.out.println("treeStack.peek() " +treeStack.peek().data);
+				treeStack.peek().left = currNode;
+				treeStack.push(currNode);
+			} else if (str.charAt(i) == ':') {
+				System.out.println("treeStack.peek() before pop() " +treeStack.peek().data);
+				treeStack.pop();
+				System.out.println("treeStack.peek() after pop() " +treeStack.peek().data);
+				treeStack.peek().right = currNode;
+			}
+		}
+		
+		
+		return root;
+		
+	}
+	
+	/**
+	 * convert a ternary expression into a binary tree
+	 * ex: 1?2?3:4:5
+	 * @param str
+	 * @return
+	 */
+	public Node buildBSTFromTernary(String str) {
+		if (str == null || str.length() == 0) {
+			return null;
+		}
+		
+		Node root = null;// = new Node(Character.getNumericValue(str.charAt(0)));
+		Stack<Node> treeStack = new Stack<Node>();
+		//treeStack.push(root);
+	
+		
+		
+		boolean qSeenLast = false;
+		boolean cSeenLast = false;
+		Node poppedNode = null, lastNode = null;
+		
+		for (int i = 0; i < str.length(); i++) {
+
+			if (i == 0) {
+				Integer rootNodeData = Character.getNumericValue(str.charAt(i));
+				root = new Node(rootNodeData);
+				treeStack.push(root);
+				lastNode = root;
+				
+			} else if (str.charAt(i) == '?' ) {
+				
+				//push the number that's before the ? onto the stack only if the symbol is ?				
+				treeStack.push(lastNode);
+				
+				qSeenLast = true;
+				
+				System.out.println("treeStack.peek() " +treeStack.peek().data);
+				
+			} else if (str.charAt(i) == ':') {
+				cSeenLast = true;
+				System.out.println("treeStack.peek() before pop() " +treeStack.peek().data);
+				poppedNode = treeStack.pop();
+				System.out.println("treeStack.peek() after pop() " +treeStack.peek().data);
+				//treeStack.peek().right = currNode;
+			} else if (qSeenLast) {
+				Integer leftNodeData = Character.getNumericValue(str.charAt(i));
+				Node leftNode = new Node(leftNodeData);
+				treeStack.peek().left = leftNode;
+				lastNode = leftNode;
+				qSeenLast = false;
+			} else if (cSeenLast) {
+				Integer rightNodeData = Character.getNumericValue(str.charAt(i));
+				Node rightNode = new Node(rightNodeData);
+				poppedNode.right = rightNode;
+				lastNode = rightNode;
+				cSeenLast = false;
+			}
+			
+			
+		}
+		
+		
+		return root;
+		
+	}
+	
+	public int diameter(Node root) {
+		//check if the root node is null, if so return 0
+		if (root == null) {
+			return 0;
+		}
+		
+		//get the heights of the left and right subtrees
+		int leftHeight = height(root.left);
+		int rightHeight = height(root.right);
+		
+		//get the diameter of the left and right subtrees
+		int leftDiameter = diameter(root.left);
+		int rightDiameter = diameter(root.right);
+		
+		/* Return max of following three
+        1) Diameter of left subtree
+        2) Diameter of right subtree
+        3) Height of left subtree + height of right subtree + 1 */
+		
+		return Math.max(leftHeight + rightHeight + 1, Math.max(leftDiameter, rightDiameter));
+		
+	}
+	
+	/**
+	 * The function Compute the "height" of a tree. Height is the
+     * number f nodes along the longest path from the root node
+     * down to the farthest leaf node.
+    */
+	public int height(Node root) {
+		if (root == null) {
+			return 0;
+		}
+		
+		/* If tree is not empty then height = 1 + max of left
+        height and right heights */
+		return (1 + Math.max(height(root.left), height(root.right)));
+		
+	}
 
 	public int minValue() {
 		return minValue(root);
@@ -244,7 +410,7 @@ public class BinaryTree {
 
 	public void printInOrderTree(Node node) {
 		if (node == null) {
-//			 System.out.println("Tree is empty!");
+			System.out.println("Tree is empty!");
 			return;
 		} else {
 			// left, node itself, right
@@ -252,6 +418,19 @@ public class BinaryTree {
 			System.out.println(node.data + "  ");
 			printInOrderTree(node.right);
 		}
+	}
+	
+	public void printPreOrderTree(Node root) {
+		if (root == null) {
+			 System.out.println("Tree is empty!");
+			return;
+		} else {
+			// root, left, right
+			System.out.println(root.data + "  ");
+			printInOrderTree(root.left);		
+			printInOrderTree(root.right);
+		}
+		
 	}
 
 	public void printPostTree() {
@@ -487,11 +666,35 @@ public class BinaryTree {
 		}
 
 	}
+	
+	public static int getMaxUniquePath (Node root) {
+		if (root == null) {
+			return 0;
+		}
+		Set<Integer> uniqueSet = new HashSet<Integer>();
+		return getMaxPath(root, uniqueSet);
+	}
+	
+	private static int getMaxPath(Node root, Set<Integer> uniqueSet) {
+		if (root == null) {
+			return uniqueSet.size();
+		}
+		
+		int left = 0;
+		int right = 0;
+		if (uniqueSet.add(root.data)) {
+			//unique entry
+			left =  getMaxPath(root.left, uniqueSet);
+			right = getMaxPath(root.right, uniqueSet);
+			uniqueSet.remove(uniqueSet.size() - 1);
+		}
+		return Math.max(left, right);
+	}
 
 	@SuppressWarnings("unused")
 	private Node createBST() {
 		Node root = null;
-		int[] bstArray = { 12, 4, 7, 5, 3, 18, 20, 42, 1, 19, 6 };
+		int[] bstArray = { 12, 4, 7, 5, 3, 18, 20, 42, 1, 19, 6, 19 };
 		for (int i = 0; i < bstArray.length; i++) {
 			root = insertNodeIntoBST(root, bstArray[i]);
 		}
@@ -536,18 +739,22 @@ public class BinaryTree {
 		 root.right.left = new Node(6);
 		 root.right.right = new Node(7);
 		 root.right.right.left = new Node(8);
+		 root.right.right.right = new Node(2);
+		 
 
-		// BinaryTree bt = new BinaryTree(root);
+		 BinaryTree bt = new BinaryTree();
 
 		// bt.printPostTree();
-		// bt.printTree();
+//		 bt.printPaths();
+//		 bt.printPostOrderTree(root);
 		// System.out.println("size: " + bt.size());
 		// System.out.println("minValue: " + bt.minValue());
-		// System.out.println("maxDepth: " + bt.maxDepth());
+		
+//		System.out.println("maxDepth: " + BinaryTree.getMaxUniquePath(root));
 		// System.out.println("hasPathSum: " + bt.hasPathSum(30));
 		// bt.printPaths();
 
-		BinaryTree bt2 = new BinaryTree();
+//		BinaryTree bt2 = new BinaryTree();
 		//System.out.println("swap Bit: " + bt2.swapBit(5));
 		//Node root = bt2.createBST();
 		
@@ -556,7 +763,7 @@ public class BinaryTree {
 	//	bt2.printInOrderTree(root);
 		//System.out.println("max depth: "+ bt2.maxDepth(root));
 		//System.out.println("isBalanced: "+ bt2.checkBalance(root));
-		bt2.topView(root);
+//		bt2.topView(root);
 
 //		for (int i = 1; i < 11; i++) {
 //			bt2.currentNodeCount = 0;
@@ -573,7 +780,9 @@ public class BinaryTree {
 //		System.out.println("kth-element: " + bt2.getKthElement(root,8).data);
 //		System.out.println("kth-element: " + bt2.getKthElement(root,9).data);
 //		System.out.println("kth-element: " + bt2.getKthElement(root,1).data);
-
+		 
+		 
+		 bt.printInOrderTree(bt.buildBSTFromTernary("1?2?3:4:5"));
 	}
 
 }

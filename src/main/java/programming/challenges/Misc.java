@@ -1,8 +1,12 @@
 package programming.challenges;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import javax.swing.tree.TreeNode;
+import java.util.Stack;
 
 public class Misc {
 
@@ -16,14 +20,12 @@ public class Misc {
 //		System.out.println(" k = 2 ==> " +miscTests.formatString("2-4a0r7-4k", 2));
 //		System.out.println(" k = 2 ==> " +miscTests.formatString("2-4a0r7-4k", 5));
 //		
-		int code = 1;
+	
 		
-		if (code --> 0) {
-			System.out.println("code: "+ code);
-		}
-		
-		int [] pivotNums = {1, 2, 3, 4, 0, 6};
-		System.out.println(miscTests.findPivot(pivotNums));
+		int [] pivotNums = {3,1,4,7,-1,10,9};
+//		System.out.println(miscTests.findPivot(pivotNums));
+		//System.out.println(matchBrace("(())))("));
+		miscTests.maxSlidingWindow(pivotNums, 3);
 
 	}
 	
@@ -233,10 +235,131 @@ public class Misc {
 		sb.reverse();
 
 		return sb.toString();//.reverse().toString();
-
 		
+	}
+	
+	/**
+	 * Find K which decides the # of open brackets are equal to the # of closed brackets
+	 * @param str
+	 * @return
+	 */
+	public static int matchBrace(String str){
+		int i = 0;
+		int j = str.length()-1;
+		while(i < j){
+			if(str.charAt(i) == ')'){
+				i++;
 				
+			}
+			if(str.charAt(j) == '('){
+				j--;
+			}
+			if(str.charAt(i) == '(' && str.charAt(j) == ')'){
+				i++;
+				j--;
+			}
+		}
+		return i+1;
+	}
+
+	/**
+	 * given a str of brackets, find if the brackets are balanced
+	 * @param str
+	 * @return
+	 */
+	public boolean balancedString (String str) {
 		
+		Stack<Character> balancedStack = new Stack<Character>();
+
+		for (int i = 0; i < str.length() - 1; i++) {
+			if (balancedStack.empty()) {
+				// push the char on the stack
+				balancedStack.push(str.charAt(i));
+			}
+
+			char currChar = balancedStack.peek();
+			if (isMatch(str.charAt(i), currChar)) {
+				// found a matching bracket
+				balancedStack.pop();
+			}
+		}
+
+		if (balancedStack.empty()) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean isMatch(char open, char close) {
+
+		if (open == '{' && close == '}') {
+			return true;
+		}
+
+		if (open == '(' && close == ')') {
+			return true;
+		}
+
+		if (open == '[' && close == ']') {
+			return true;
+		}
+		return false;
+
+	}
+	
+	public int[] maxSlidingWindow(int [] arr, int windowSize) {
+		if (arr.length == 0) {
+			return new int[0];
+		}
+		
+		//size for new array
+		int newArraySize = arr.length - windowSize + 1;
+		int [] resultArr = new int[newArraySize];
+		
+		//create a priority to store the max in the sliding window
+		Queue<Integer> pQueue = new PriorityQueue<Integer>(newArraySize, new Comparator<Integer>() {
+
+			@Override
+			public int compare(Integer firstNum, Integer secondNum) {
+				
+				//add to queue in reverse order (max heap, biggest interger at the head)
+				if (firstNum < secondNum) return 1;
+				if (firstNum > secondNum) return -1;
+				return 0;
+			}
+			
+		});
+		
+		//iterate through first window and add numbers to queue
+		for (int i = 0; i < windowSize; i++) {
+			System.out.println("arr["+i+"] = " + arr[i]); 
+			pQueue.add(arr[i]);
+			
+		}
+		System.out.println("pQueue.peek() " + pQueue.peek());
+		//add the first max integer to the results array
+		resultArr[0] = pQueue.peek();
+		
+		for (int j = windowSize; j < arr.length; j++) {
+			//remove the number that falls out of the window
+			System.out.println("number to fall out of window: "+arr[j-windowSize]);
+			
+			pQueue.remove(arr[j-windowSize]);
+			
+			//add the current number in the current window
+			System.out.println("current number to add to queue: "+arr[j]);
+			pQueue.add(arr[j]);
+			
+			//current max to be added to result array
+			System.out.println("number added to result array: " + pQueue.peek());
+			resultArr[j - windowSize + 1] = pQueue.peek();
+		}
+		
+		
+		
+		
+		return resultArr;
 		
 	}
 
