@@ -10,7 +10,7 @@ public class BinaryTree {
 	// root node pointer. will be null for an empty tree
 
 	private Node root;
-
+	private Node head;
 	private static class Node {
 		Node left;
 		Node right;
@@ -206,6 +206,21 @@ public class BinaryTree {
 		}
 
 	}
+	
+	public int maxNumberInBinaryTree(Node root) {
+		if (root == null) {
+			return 0;
+		}
+		
+		int max = root.data;
+		if (root.left != null) {
+			max = Math.max(max, maxNumberInBinaryTree(root.left));
+		}
+		if (root.right != null) {
+			max = Math.max(max, maxNumberInBinaryTree(root.right));
+		}
+		return max;
+	}
 
 	public int maxDepth() {
 		return maxDepth(root);
@@ -226,6 +241,14 @@ public class BinaryTree {
 			System.out.println("max+1 :" + (Math.max(leftDepth, rightDepth) + 1));
 			return Math.max(leftDepth, rightDepth) + 1;
 		}
+	}
+	
+	/**
+	 * Given a preorder traversal of a BST, print out the inroder traversal of the BST
+	 * @param nums
+	 */
+	public void printInOrder(int [] nums) {
+		
 	}
 	
 
@@ -344,6 +367,217 @@ public class BinaryTree {
 		
 	}
 	
+	/**
+	 * given binary tree of integers, store the tree into a lsit
+	 * @param root
+	 * @return
+	 */
+	public List<Integer> store(Node root) {
+		
+		List<Integer> treeList = new ArrayList<Integer>();
+		if (root == null) {
+			return treeList;
+		}
+		
+		//printPreOrderTree(root);
+		
+		return preOrderList(root, treeList);
+		
+	}
+	/**
+	 * concatenates two DLLs and returns the head of the list
+	 */
+	public Node concatenate(Node leftList, Node rightList) {
+		//if either list is empty, return the other list
+		if (leftList == null) {
+			return rightList;
+		}
+		if (rightList == null) {
+			return leftList;
+		}
+		
+		//store the last node of the left list
+		Node leftLast = leftList.left;
+		
+		//store the last node of the right list
+		Node rightLast = rightList.left;
+		
+		//connect the last node of left list with the first node of the right list
+		leftLast.right = rightList;
+		rightList.left = leftLast;
+		
+		//left of first node refers to the last node in the list
+		leftList.left = rightLast;
+		
+		//right of last node refers to the first node of the list
+		rightLast.right = leftList;
+		
+		//return the head of the list
+		return leftList;
+	}
+	
+	/**
+	 * write a function which convert a binary tree into a circular, in-order, double-linked list, in place.
+	 * Your function should return a pointer to the left most element of the original tree
+	 * @param root
+	 * @return
+	 */
+	public Node bTreeToCList(Node root) {
+		if (root == null) {
+			return null;
+		}
+		
+		//recursively convert left and right subtrees
+		Node left = bTreeToCList(root.left);
+		Node right = bTreeToCList(root.right);
+		
+		//make a circular linked list of a single node
+		// or root node. to do so, make the right and left pointers
+		//of this node point to itself
+		root.left = root.right = root;
+		
+		//step 1: concatenate the left list with the list with a single node i.e. current node
+		//step 2: concatenate the returned list with the right list
+		
+		return concatenate(concatenate(left, root), right);
+		
+	}
+	
+	/**
+	 * converts a binary tree into a doubly linked list in order
+	 */
+	static Node prev;
+	public void convertBT2DLL(Node root) {
+		if (root == null) {
+			return;
+		}
+		
+		//traverse the left subtree
+		convertBT2DLL(root.left);
+		
+		//set the left most node as the head of the DLL
+		if (prev == null) {
+			head = root;
+		} else {
+			root.left = prev;
+			prev.right = root;
+		}
+		
+		prev = root;
+		
+		//traverse the right sub tree
+		convertBT2DLL(root.right);
+		
+	}
+	
+	
+	
+	/**
+	 * create an inorder list given a binary tree
+	 * @param root
+	 * @param treeList
+	 * @return
+	 */
+	private List<Integer> inOrderList(Node root, List<Integer> treeList) {
+		//traverse pre-order to store the tree into a list
+		// left, root, right		
+		
+		if (root.left != null) {
+			preOrderList(root.left, treeList);			
+		}
+		
+		// add node to list
+		treeList.add(root.data);
+		System.out.println(treeList.toString());
+		
+		if (root.right != null) {
+			preOrderList(root.right, treeList);			
+			
+		}		
+		return treeList;
+		
+
+	}
+	
+	/**
+	 * create a preorderlist given a binary tree
+	 * @param root
+	 * @param treeList
+	 * @return
+	 */
+	private List<Integer> preOrderList(Node root, List<Integer> treeList) {
+		//traverse pre-order to store the tree into a list
+		// root, left, right
+		
+		// add node to list
+		treeList.add(root.data);
+		System.out.println(treeList.toString());
+		if (root.left != null) {
+			preOrderList(root.left, treeList);			
+		}
+		
+		if (root.right != null) {
+			preOrderList(root.right, treeList);			
+			
+		}		
+		return treeList;
+		
+
+	}
+	
+	/**
+	 * given a list of integers, recreate the tree from store() function
+	 * @param treeList
+	 * @return
+	 */
+	public Node restore(List<Integer> treeList) {
+		
+		List<Integer> preOrderList = preOrderList(root, treeList);
+		
+		List<Integer> inOrderList = inOrderList(root, treeList);
+		int preStart = 0;
+	    int preEnd = preOrderList.size() - 1;
+	    int inStart = 0;
+	    int inEnd = inOrderList.size() - 1;
+	 	
+		Node tree = construct(preOrderList, preStart, preEnd, inOrderList, inStart, inEnd);
+	
+		return tree;
+	}
+	
+	/**
+	 * construct binary tree from an inorder and pre order list
+	 * @param preorder
+	 * @param preStart
+	 * @param preEnd
+	 * @param inorder
+	 * @param inStart
+	 * @param inEnd
+	 * @return
+	 */
+	public Node construct(List<Integer> preorder, int preStart, int preEnd, List<Integer> inorder, int inStart, int inEnd){
+	    if(preStart>preEnd||inStart>inEnd){
+	        return null;
+	    }
+	 
+	    int val = preorder.get(preStart);
+	    Node p = new Node(val);
+	 
+	    //find parent element index from inorder
+	    int k=0;
+	    for(int i=0; i<inorder.size(); i++){
+	        if(val == inorder.get(i)){
+	            k=i;
+	            break;
+	        }
+	    }
+	 
+	    p.left = construct(preorder, preStart+1, preStart+(k-inStart), inorder, inStart, k-1);
+	    p.right= construct(preorder, preStart+(k-inStart)+1, preEnd, inorder, k+1 , inEnd);
+	 
+	    return p;
+	}
+
 	public int diameter(Node root) {
 		//check if the root node is null, if so return 0
 		if (root == null) {
@@ -410,7 +644,7 @@ public class BinaryTree {
 
 	public void printInOrderTree(Node node) {
 		if (node == null) {
-			System.out.println("Tree is empty!");
+//			System.out.println("Tree is empty!");
 			return;
 		} else {
 			// left, node itself, right
@@ -422,13 +656,13 @@ public class BinaryTree {
 	
 	public void printPreOrderTree(Node root) {
 		if (root == null) {
-			 System.out.println("Tree is empty!");
+//			 System.out.println("Tree is empty!");
 			return;
 		} else {
 			// root, left, right
 			System.out.println(root.data + "  ");
-			printInOrderTree(root.left);		
-			printInOrderTree(root.right);
+			printPreOrderTree(root.left);		
+			printPreOrderTree(root.right);
 		}
 		
 	}
@@ -782,7 +1016,10 @@ public class BinaryTree {
 //		System.out.println("kth-element: " + bt2.getKthElement(root,1).data);
 		 
 		 
-		 bt.printInOrderTree(bt.buildBSTFromTernary("1?2?3:4:5"));
+		//bt.printInOrderTree(bt.buildBSTFromTernary("1?2?3:4:5"));
+		List<Integer> treeList = bt.store(root);
+		bt.restore(treeList);
+		bt.printTree();
 	}
 
 }
